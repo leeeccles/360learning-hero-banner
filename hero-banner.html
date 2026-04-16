@@ -1,143 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>360Learning Hero Banner</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    width: 100%;
+    height: 52px;
+    overflow: hidden;
+    background: transparent;
+  }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 56px;
-      overflow: hidden;
-      background: transparent;
-    }
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #111827;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    letter-spacing: -0.01em;
+  }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 3px;
-    }
+  p { white-space: nowrap; }
 
-    .line1 {
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #111827;
-      line-height: 1.3;
-      margin: 0;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-    }
+  .ai {
+    background: linear-gradient(100deg, #6d28d9 0%, #a21caf 55%, #ec4899 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-    .companion {
-      background: linear-gradient(100deg, #6d28d9 0%, #a21caf 55%, #ec4899 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      white-space: nowrap;
-    }
+  .cursor {
+    display: inline-block;
+    width: 2px;
+    height: 0.75em;
+    background: #ec4899;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-radius: 1px;
+    animation: blink 1s step-end infinite;
+  }
 
-    .line2 {
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      line-height: 1.3;
-      margin: 0;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-      height: 1.3em;
-      display: flex;
-      align-items: center;
-    }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
 
-    .typed {
-      background: linear-gradient(100deg, #6d28d9 0%, #a21caf 55%, #ec4899 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 3px;
-      height: 0.8em;
-      background: #ec4899;
-      margin-left: 3px;
-      vertical-align: middle;
-      border-radius: 2px;
-      animation: blink 1s step-end infinite;
-      flex-shrink: 0;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .cursor { animation: none; }
-    }
-  </style>
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; }
+  }
+</style>
 </head>
 <body>
 
-  <p class="line1">Ask <span class="companion">✦ Companion</span> anything about how work gets done here.</p>
+<p>Ask <span class="ai">✦ Companion</span> anything about how work gets done here.</p>
+<p><span id="t" class="ai" aria-live="polite"></span><span class="cursor" id="c" aria-hidden="true"></span></p>
 
-  <p class="line2">
-    <span id="typed" class="typed" aria-live="polite" aria-atomic="true"></span><span id="cursor" class="cursor" aria-hidden="true"></span>
-  </p>
+<script>
+(function(){
+  /* ── EDIT ME ── */
+  var Q = [
+    "What's our AI policy?",
+    "How do I handle a pricing objection?",
+    "How do I create a pivot table?",
+    "How do we close a deal?"
+  ];
+  /* ──────────── */
 
-  <script>
-  (function () {
-    /* ─── EDIT ME ─────────────────────────────────────────── */
-    var QUESTIONS = [
-      "What's our AI policy?",
-      "How do I handle a pricing objection?",
-      "How do I create a pivot table?",
-      "How do we close a deal?"
-    ];
-    /* ──────────────────────────────────────────────────────── */
+  var t = document.getElementById('t');
+  var c = document.getElementById('c');
 
-    var PAUSE_MS   = 2500;
-    var TYPE_MS    = 55;
-    var DELETE_MS  = 28;
-    var BETWEEN_MS = 350;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    t.textContent = Q[0]; c.style.display = 'none'; return;
+  }
 
-    var typedEl  = document.getElementById('typed');
-    var cursorEl = document.getElementById('cursor');
+  var qi = 0, ci = 0, del = false;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      typedEl.textContent = QUESTIONS[0];
-      cursorEl.style.display = 'none';
-      return;
+  function tick() {
+    var q = Q[qi];
+    if (!del) {
+      t.textContent = q.slice(0, ++ci);
+      if (ci === q.length) { del = true; setTimeout(tick, 2500); return; }
+      setTimeout(tick, 55);
+    } else {
+      t.textContent = q.slice(0, --ci);
+      if (ci === 0) { del = false; qi = (qi + 1) % Q.length; setTimeout(tick, 350); return; }
+      setTimeout(tick, 28);
     }
+  }
 
-    var qIndex = 0, charIndex = 0, deleting = false;
-
-    function tick() {
-      var q = QUESTIONS[qIndex];
-      if (!deleting) {
-        typedEl.textContent = q.slice(0, ++charIndex);
-        if (charIndex === q.length) { deleting = true; setTimeout(tick, PAUSE_MS); return; }
-        setTimeout(tick, TYPE_MS);
-      } else {
-        typedEl.textContent = q.slice(0, --charIndex);
-        if (charIndex === 0) { deleting = false; qIndex = (qIndex + 1) % QUESTIONS.length; setTimeout(tick, BETWEEN_MS); return; }
-        setTimeout(tick, DELETE_MS);
-      }
-    }
-
-    setTimeout(tick, 600);
-  }());
-  </script>
+  setTimeout(tick, 600);
+}());
+</script>
 
 </body>
 </html>
