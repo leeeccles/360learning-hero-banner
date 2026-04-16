@@ -11,25 +11,21 @@
 
   html, body {
     width: 100%;
-    height: 52px;
+    height: 32px;
     overflow: hidden;
     background: transparent;
   }
 
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    font-size: 1.05rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    line-height: 1.35;
+    line-height: 1;
     color: #111827;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2px;
-    letter-spacing: -0.01em;
+    align-items: center;
+    white-space: nowrap;
   }
-
-  p { white-space: nowrap; }
 
   .ai {
     background: linear-gradient(100deg, #6d28d9 0%, #a21caf 55%, #ec4899 100%);
@@ -41,10 +37,10 @@
   .cursor {
     display: inline-block;
     width: 2px;
-    height: 0.75em;
+    height: 1em;
     background: #ec4899;
     margin-left: 2px;
-    vertical-align: middle;
+    vertical-align: text-bottom;
     border-radius: 1px;
     animation: blink 1s step-end infinite;
   }
@@ -61,8 +57,7 @@
 </head>
 <body>
 
-<p>Ask <span class="ai">✦ Companion</span> anything about how work gets done here.</p>
-<p><span id="t" class="ai" aria-live="polite"></span><span class="cursor" id="c" aria-hidden="true"></span></p>
+<span>Ask&nbsp;<span class="ai">✦ Companion</span>&nbsp;—&nbsp;</span><span id="t" class="ai" aria-live="polite"></span><span class="cursor" id="c" aria-hidden="true"></span>
 
 <script>
 (function(){
