@@ -1,0 +1,167 @@
+<!-- ============================================================
+     360Learning Hero Banner — paste into HTML widget block
+     Transparent. Plus Jakarta Sans. AI-gradient on Companion + typed line.
+     ============================================================ -->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+  .hl-hero {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    width: 100%;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    min-height: 110px;
+    animation: hl-fadein 0.5s ease both;
+  }
+
+  @keyframes hl-fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hl-hero { animation: none; }
+  }
+
+  /* ── Line 1 — heading with inline Companion mark ── */
+  .hl-line1 {
+    font-size: clamp(1.35rem, 2.8vw, 1.95rem);
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.025em;
+  }
+
+  /* The ✦ Companion span — AI gradient, same weight */
+  .hl-companion {
+    background: linear-gradient(100deg, #6d28d9 0%, #a21caf 55%, #ec4899 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    white-space: nowrap;
+  }
+
+  /* ── Line 2 — typed cycling question ── */
+  .hl-line2 {
+    font-size: clamp(1.35rem, 2.8vw, 1.95rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: -0.025em;
+    min-height: 1.25em;
+    display: flex;
+    align-items: center;
+  }
+
+  .hl-typed {
+    background: linear-gradient(100deg, #6d28d9 0%, #a21caf 55%, #ec4899 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    display: inline;
+  }
+
+  .hl-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 0.8em;
+    background: #ec4899;
+    margin-left: 3px;
+    vertical-align: middle;
+    border-radius: 2px;
+    animation: hl-blink 1s step-end infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes hl-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+</style>
+
+<div class="hl-hero" role="banner">
+
+  <p class="hl-line1">
+    Ask <span class="hl-companion">✦ Companion</span> anything about how work gets done here.
+  </p>
+
+  <p class="hl-line2">
+    <span
+      class="hl-typed"
+      id="hl-typed-text"
+      aria-live="polite"
+      aria-atomic="true"
+    ></span><span
+      class="hl-cursor"
+      id="hl-cursor"
+      aria-hidden="true"
+    ></span>
+  </p>
+
+</div>
+
+<script>
+(function () {
+  /* ─── EDIT ME ──────────────────────────────────────────────── */
+  var QUESTIONS = [
+    "What's our AI policy?",
+    "How do I handle a pricing objection?",
+    "How do I create a pivot table?",
+    "How do we close a deal?"
+  ];
+  /* ──────────────────────────────────────────────────────────── */
+
+  var PAUSE_MS   = 2500;
+  var TYPE_MS    = 55;
+  var DELETE_MS  = 28;
+  var BETWEEN_MS = 350;
+
+  var typedEl  = document.getElementById('hl-typed-text');
+  var cursorEl = document.getElementById('hl-cursor');
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    typedEl.textContent = QUESTIONS[0];
+    cursorEl.style.display = 'none';
+    return;
+  }
+
+  var qIndex    = 0;
+  var charIndex = 0;
+  var deleting  = false;
+
+  function tick () {
+    var q = QUESTIONS[qIndex];
+    if (!deleting) {
+      charIndex++;
+      typedEl.textContent = q.slice(0, charIndex);
+      if (charIndex === q.length) {
+        deleting = true;
+        setTimeout(tick, PAUSE_MS);
+        return;
+      }
+      setTimeout(tick, TYPE_MS);
+    } else {
+      charIndex--;
+      typedEl.textContent = q.slice(0, charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        qIndex = (qIndex + 1) % QUESTIONS.length;
+        setTimeout(tick, BETWEEN_MS);
+        return;
+      }
+      setTimeout(tick, DELETE_MS);
+    }
+  }
+
+  setTimeout(tick, 600);
+}());
+</script>
