@@ -11,11 +11,10 @@
 
     body {
       margin: 0;
-      padding: 16px 24px;
+      padding: 0;
       background: transparent;
       display: flex;
       align-items: center;
-      min-height: 100vh;
     }
 
     .hero {
@@ -148,6 +147,13 @@
 
     setTimeout(tick, 600);
   }());
+
+  // Report exact content height to parent so iframe needs no fixed height
+  function sendHeight() {
+    window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
   </script>
 
 </body>
