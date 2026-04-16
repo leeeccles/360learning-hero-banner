@@ -9,39 +9,31 @@
 
     *, *::before, *::after { box-sizing: border-box; }
 
-    body {
+    html, body {
       margin: 0;
       padding: 0;
+      height: 88px;
+      overflow: hidden;
       background: transparent;
-      display: flex;
-      align-items: center;
     }
 
-    .hero {
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      width: 100%;
+    body {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      animation: fadein 0.5s ease both;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .hero { animation: none; }
+      justify-content: center;
+      gap: 5px;
+      padding: 0 2px;
     }
 
     .line1 {
-      font-size: clamp(1.35rem, 2.8vw, 1.95rem);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 1.7rem;
       font-weight: 800;
       color: #111827;
-      line-height: 1.2;
+      line-height: 1.25;
       margin: 0;
       letter-spacing: -0.025em;
+      white-space: nowrap;
     }
 
     .companion {
@@ -54,12 +46,14 @@
     }
 
     .line2 {
-      font-size: clamp(1.35rem, 2.8vw, 1.95rem);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 1.7rem;
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.25;
       margin: 0;
       letter-spacing: -0.025em;
-      min-height: 1.25em;
+      white-space: nowrap;
+      height: 1.25em;
       display: flex;
       align-items: center;
     }
@@ -88,22 +82,19 @@
       0%, 100% { opacity: 1; }
       50%       { opacity: 0; }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cursor { animation: none; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="hero">
-    <p class="line1">
-      Ask <span class="companion">✦ Companion</span> anything about how work gets done here.
-    </p>
-    <p class="line2">
-      <span id="typed" aria-live="polite" aria-atomic="true" class="typed"></span><span
-        id="cursor"
-        class="cursor"
-        aria-hidden="true"
-      ></span>
-    </p>
-  </div>
+  <p class="line1">Ask <span class="companion">✦ Companion</span> anything about how work gets done here.</p>
+
+  <p class="line2">
+    <span id="typed" class="typed" aria-live="polite" aria-atomic="true"></span><span id="cursor" class="cursor" aria-hidden="true"></span>
+  </p>
 
   <script>
   (function () {
@@ -147,13 +138,6 @@
 
     setTimeout(tick, 600);
   }());
-
-  // Report exact content height to parent so iframe needs no fixed height
-  function sendHeight() {
-    window.parent.postMessage({ iframeHeight: document.body.scrollHeight }, '*');
-  }
-  window.addEventListener('load', sendHeight);
-  window.addEventListener('resize', sendHeight);
   </script>
 
 </body>
