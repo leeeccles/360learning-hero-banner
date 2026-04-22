@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html, body {
     width: 100%;
     margin: 0;
@@ -16,67 +15,60 @@
     background: transparent;
     overflow: visible;
   }
-
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     line-height: 1.3;
     color: #111827;
     white-space: nowrap;
   }
-
   .ai {
     background: linear-gradient(100deg, #6d28d9 0%, #a21caf 55%, #ec4899 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-
   .cursor {
     display: inline-block;
     width: 2px;
+    /*
+     * height: 1em covers the full glyph range of the font.
+     * vertical-align: -0.2em shifts the cursor 0.2em below the baseline,
+     * so it covers ~0.2em of descender depth (g, p, q, y, j)
+     * and ~0.8em of ascender/cap height above — the full typeable range.
+     */
     height: 1em;
+    vertical-align: -0.2em;
     background: #111827;
     margin-left: 2px;
-    vertical-align: text-bottom;
     border-radius: 1px;
     animation: blink 1s step-end infinite;
   }
-
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0; }
   }
-
   @media (prefers-reduced-motion: reduce) {
     .cursor { animation: none; }
   }
 </style>
 </head>
 <body>
-
 <span>Ask&nbsp;<span class="ai">✦ Companion</span>:&nbsp;</span><span id="t" aria-live="polite"></span><span class="cursor" id="c" aria-hidden="true"></span>
-
 <script>
 (function(){
-  /* ── EDIT ME ── */
   var Q = [
     "How do our top reps handle objections?",
     "What are some ways I can use AI to save time?",
     "What are our company values?"
   ];
-  /* ──────────── */
-
   var t = document.getElementById('t');
   var c = document.getElementById('c');
-
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     t.textContent = Q[0]; c.style.display = 'none'; return;
   }
-
   var qi = 0, ci = 0, del = false;
-
   function tick() {
     var q = Q[qi];
     if (!del) {
@@ -89,10 +81,8 @@
       setTimeout(tick, 28);
     }
   }
-
   setTimeout(tick, 600);
 }());
 </script>
-
 </body>
 </html>
